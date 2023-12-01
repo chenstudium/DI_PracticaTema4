@@ -1,18 +1,15 @@
 package es.studium.tiendecitaKC;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.Color;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import javax.swing.JLabel;
-import java.awt.Color;
 import javax.swing.JSeparator;
 
 public class ModificacionCompletada extends JDialog
@@ -20,10 +17,7 @@ public class ModificacionCompletada extends JDialog
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
 
-	/**
-	 * Launch the application.
-	 */
-	// Método principal que inicia la programa
+	// Método principal que inicia el programa
 	public static void main(String[] args)
 	{
 		try
@@ -39,9 +33,6 @@ public class ModificacionCompletada extends JDialog
 		}
 	}
 
-	/**
-	 * Create the dialog.
-	 */
 	// Constructor
 	public ModificacionCompletada()
 	{
@@ -73,7 +64,7 @@ public class ModificacionCompletada extends JDialog
 		okButton.setActionCommand("OK");
 		okButton.addActionListener(new ActionListener()
 		{
-			// Al clicar en Aceptar, se abre la ventana ConsultaArticulos y se cierra la actual
+			// Al clicar en Aceptar, se vuelve a abrir la ventana ConsultaArticulos y se cierra la actual
 			public void actionPerformed(ActionEvent e)
 			{
 				ConsultaArticulos dig = new ConsultaArticulos();

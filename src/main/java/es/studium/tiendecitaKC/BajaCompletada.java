@@ -1,43 +1,39 @@
 package es.studium.tiendecitaKC;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-
+import java.awt.Font;
+import java.awt.Color;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import java.awt.Font;
-import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.JSeparator;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class BajaCompletada extends JDialog
 {
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
 
-	/**
-	 * Launch the application.
-	 */
+	// Método principal que inicia el programa
 	public static void main(String[] args)
 	{
 		try
 		{
-			BajaCompletada dialog = new BajaCompletada();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e)
+			// Mostrar la ventana al iniciarse el programa
+			BajaCompletada dig = new BajaCompletada();
+			dig.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			dig.setVisible(true);
+		}
+		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
 	}
 
-	/**
-	 * Create the dialog.
-	 */
+	// Constructor
 	public BajaCompletada()
 	{
 		setTitle("Programa de gestión - Artículos - Baja completada");
@@ -58,6 +54,7 @@ public class BajaCompletada extends JDialog
 		btnTickets.setFont(new Font("Comic Sans MS", Font.PLAIN, 21));
 		btnTickets.addActionListener(new ActionListener()
 		{
+			// Al clicar en Tickets, se abre la ventana ConsultaTickets y se cierra la actual
 			public void actionPerformed(ActionEvent e)
 			{
 				ConsultaTickets dig = new ConsultaTickets();
@@ -89,6 +86,7 @@ public class BajaCompletada extends JDialog
 		{
 			public void actionPerformed(ActionEvent e)
 			{
+				// Al clicar en Nueva baja, se abre la ventana BajaArticulo y se cierra la actual
 				BajaArticulo dig = new BajaArticulo();
 				dig.setVisible(true);
 				setVisible(false);
@@ -106,6 +104,7 @@ public class BajaCompletada extends JDialog
 		{
 			public void actionPerformed(ActionEvent e)
 			{
+				// Al clicar en Aceptar, se vuelve a abrir la ventana ConsultaArticulos y se cierra la actual
 				ConsultaArticulos dig = new ConsultaArticulos();
 				dig.setVisible(true);
 				setVisible(false);

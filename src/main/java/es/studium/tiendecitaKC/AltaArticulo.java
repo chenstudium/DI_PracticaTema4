@@ -1,30 +1,24 @@
 package es.studium.tiendecitaKC;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.Color;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.swing.JTextField;
+import javax.swing.JSeparator;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import javax.swing.JTextField;
-import java.awt.Color;
-import javax.swing.JSeparator;
 
 public class AltaArticulo extends JDialog
 {
-	// Datos para la conexión a la base de datos
-	private static final String driver = "com.mysql.cj.jdbc.Driver";
+	// Datos para la conexión a la BD
 	private static final String URL = "jdbc:mysql://localhost:3306/tiendecitaKC";
 	private static final String USER = "root";
 	private static final String PASSWORD = "Studium2022;";
@@ -36,13 +30,12 @@ public class AltaArticulo extends JDialog
 	private JTextField txtPrecio;
 	private JTextField txtCantidad;
 
-	/**
-	 * Launch the application.
-	 */
+	// Método principal que inicia el programa
 	public static void main(String[] args)
 	{
 		try
 		{
+			// Mostrar la ventana al iniciarse el programa
 			AltaArticulo dialog = new AltaArticulo();
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
@@ -53,9 +46,7 @@ public class AltaArticulo extends JDialog
 		}
 	}
 
-	/**
-	 * Create the dialog.
-	 */
+	// Constructor
 	public AltaArticulo()
 	{
 		setTitle("Programa de gestión - Artículos - Alta ");
@@ -78,6 +69,7 @@ public class AltaArticulo extends JDialog
 		btnTickets.setFont(new Font("Comic Sans MS", Font.PLAIN, 21));
 		btnTickets.addActionListener(new ActionListener()
 		{
+			// Al clicar en Tickets, se abre la ventana ConsultaTickets y se cierra la actual
 			public void actionPerformed(ActionEvent e)
 			{
 				ConsultaTickets dig = new ConsultaTickets();
@@ -150,6 +142,7 @@ public class AltaArticulo extends JDialog
 		okButton.setActionCommand("OK");
 		okButton.addActionListener(new ActionListener()
 		{
+			// Al clicar en Aceptar, agrega los datos de los campos a la BD, se abre la ventana AltaCompletadaArticulos y se cierra la actual
 			public void actionPerformed(ActionEvent e)
 			{
 				agregarDatos();
@@ -166,6 +159,7 @@ public class AltaArticulo extends JDialog
 		cancelButton.setActionCommand("Cancel");
 		cancelButton.addActionListener(new ActionListener()
 		{
+			// Al clicar en Cancelar, se vuelve a abrir la ventana ConsultaArticulos y se cierra la actual
 			public void actionPerformed(ActionEvent e)
 			{
 				ConsultaArticulos dig = new ConsultaArticulos();
@@ -177,12 +171,10 @@ public class AltaArticulo extends JDialog
 		getContentPane().add(cancelButton);
 	}
 
-	// Método para agregar datos a la base de datos
+	// Función para agregar datos a la BD
 	private void agregarDatos()
 	{
 		Connection connection = null;
-		PreparedStatement preparedStatement = null;
-		ResultSet resultSet = null;
 
 		// Obtener valores de los campos
 		String descripcion = txtDescripcion.getText();
@@ -190,27 +182,23 @@ public class AltaArticulo extends JDialog
 		String precio = txtPrecio.getText();
 		String cantidad = txtCantidad.getText();
 
-		// Realizar la inserción en la base de datos
 		try
 		{
-			// Establecer la conexión
+			// Conexión
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 
-			// Crear la consulta SQL para la inserción
+			// Sentencia SQL de inserción de datos
 			String sql = "INSERT INTO articulos (descripcionArticulo, idArticulo, precioArticulo, cantidadArticulo) VALUES (?, ?, ?, ?)";
 
-			// Preparar la declaración SQL con los parámetros
 			try (PreparedStatement declaracion = connection.prepareStatement(sql))
 			{
 				declaracion.setString(1, descripcion);
 				declaracion.setString(2, id);
 				declaracion.setString(3, precio);
 				declaracion.setString(4, cantidad);
-
-				// Ejecutar la consulta
 				declaracion.executeUpdate();
 
-				// Cerrar la conexión
+				// Cerrar conexión
 				connection.close();
 			}
 		}

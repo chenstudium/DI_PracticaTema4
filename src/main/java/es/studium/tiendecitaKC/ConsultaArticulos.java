@@ -1,45 +1,35 @@
 package es.studium.tiendecitaKC;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-
+import java.awt.Font;
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import java.awt.Font;
-import java.awt.Color;
 import javax.swing.JLabel;
-import java.awt.Panel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.swing.JTextField;
+import javax.swing.JSeparator;
+import javax.swing.SwingConstants;
+import javax.swing.JScrollBar;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-
-import javax.swing.JTextField;
-import javax.swing.JSeparator;
-import javax.swing.JTextArea;
-import javax.swing.SwingConstants;
-import javax.swing.JRadioButton;
-import java.awt.Scrollbar;
-import javax.swing.JScrollBar;
 
 public class ConsultaArticulos extends JDialog
 {
-
-	private static final long serialVersionUID = 1L;
-	private final JPanel contentPanel = new JPanel();
-	private JTextField textField;
-
-	// Datos para la conexión a la base de datos
-	private static final String driver = "com.mysql.cj.jdbc.Driver";
+	// Datos para la conexión a la BD
 	private static final String URL = "jdbc:mysql://localhost:3306/tiendecitaKC";
 	private static final String USER = "root";
 	private static final String PASSWORD = "Studium2022;";
+
+	private static final long serialVersionUID = 1L;
+	private final JPanel contentPanel = new JPanel();
+	
 	private JTextField textFieldDescripcion1;
 	private JTextField textFieldDescripcion2;
 	private JTextField textFieldDescripcion3;
@@ -70,16 +60,15 @@ public class ConsultaArticulos extends JDialog
 	private JTextField textFieldCantidad7;
 	private JLabel lblProgramaDeGestion;
 
-	/**
-	 * Launch the application.
-	 */
+	// Método principal que inicia el programa
 	public static void main(String[] args)
 	{
 		try
 		{
-			ConsultaArticulos dialog = new ConsultaArticulos();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
+			// Mostrar la ventana al iniciarse el programa
+			ConsultaArticulos dig = new ConsultaArticulos();
+			dig.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			dig.setVisible(true);
 		}
 		catch (Exception e)
 		{
@@ -87,9 +76,7 @@ public class ConsultaArticulos extends JDialog
 		}
 	}
 
-	/**
-	 * Create the dialog.
-	 */
+	// Constructor
 	public ConsultaArticulos()
 	{
 		setTitle("Programa de gestión - Artículos - Consulta");
@@ -110,6 +97,7 @@ public class ConsultaArticulos extends JDialog
 		btnTickets.setForeground(new Color(232, 116, 0));
 		btnTickets.addActionListener(new ActionListener()
 		{
+			// Al clicar en Tickets, se abre la ventana ConsultaTickets y se cierra la actual
 			public void actionPerformed(ActionEvent e)
 			{
 				ConsultaTickets dig = new ConsultaTickets();
@@ -138,6 +126,7 @@ public class ConsultaArticulos extends JDialog
 		btnNuevoAlta.setForeground(new Color(176, 0, 176));
 		btnNuevoAlta.addActionListener(new ActionListener()
 		{
+			// Al clicar en Nuevo alta, se abre la ventana AltaArticulo y se cierra la actual
 			public void actionPerformed(ActionEvent e)
 			{
 				AltaArticulo dig = new AltaArticulo();
@@ -153,6 +142,7 @@ public class ConsultaArticulos extends JDialog
 		btnBaja.setForeground(new Color(176, 0, 176));
 		btnBaja.addActionListener(new ActionListener()
 		{
+			// Al clicar en Baja, se abre la ventana BajaArticulo y se cierra la actual
 			public void actionPerformed(ActionEvent e)
 			{
 				BajaArticulo dig = new BajaArticulo();
@@ -168,6 +158,7 @@ public class ConsultaArticulos extends JDialog
 		btnModificacion.setFont(new Font("Comic Sans MS", Font.PLAIN, 10));
 		btnModificacion.addActionListener(new ActionListener()
 		{
+			// Al clicar en Modificación, se abre la ventana ModificacionArticulo y se cierra la actual
 			public void actionPerformed(ActionEvent e)
 			{
 				ModificacionArticulo dig = new ModificacionArticulo();
@@ -418,40 +409,39 @@ public class ConsultaArticulos extends JDialog
 
 	private void consultarArticulos()
 	{
-		Connection connection = null;
+		Connection conexion = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 
 		try
 		{
-			// Establecer la conexión
-			connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			// Conexión
+			conexion = DriverManager.getConnection(URL, USER, PASSWORD);
 
-			// Consulta SQL (ajusta según tu esquema y necesidades)
+			// Sentencia SQL para obtener todos los datos de los artículos
 			String sql = "SELECT idArticulo, descripcionArticulo, precioArticulo, cantidadArticulo FROM articulos WHERE descripcionArticulo LIKE ?";
-			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement = conexion.prepareStatement(sql);
 
-			// Establecer parámetro
+			// Parámetro
 			preparedStatement.setString(1, "%" + textFieldId1.getText() + "%");
-			
-			// Ejecutar la consulta
 			resultSet = preparedStatement.executeQuery();
 
 			// Procesar resultados
 			int index = 1; // Índice para rastrear el conjunto de campos de texto actual
-			// Procesar resultados y mostrar en la interfaz gráfica
+			
+			// Procesar resultados y mostrarlos
 			while (resultSet.next() && index <= 7)
 			{
-				// Obtener datos de la base de datos y guardarlos en variables
+				// Obtener los datos de la BD y guardarlos en variables
 				int id = resultSet.getInt("idArticulo");
 				String descripcion = resultSet.getString("descripcionArticulo");
 				double precio = resultSet.getDouble("precioArticulo");
 				int cantidad = resultSet.getInt("cantidadArticulo");
 
-				// Establecer los valores en los campos de texto
+				// Establecer los datos en los campos de la primera fila
 				asignarValoresCamposTexto(index, descripcion, id, precio, cantidad);
 
-				// Incrementar el índice para el siguiente conjunto de campos de texto
+				// Incrementar el índice para los campos de la siguiente fila
 				index++;
 			}
 		}
@@ -468,8 +458,8 @@ public class ConsultaArticulos extends JDialog
 					resultSet.close();
 				if (preparedStatement != null)
 					preparedStatement.close();
-				if (connection != null)
-					connection.close();
+				if (conexion != null)
+					conexion.close();
 			}
 			catch (SQLException e)
 			{

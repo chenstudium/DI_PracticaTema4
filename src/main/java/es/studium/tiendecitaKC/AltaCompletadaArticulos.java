@@ -1,16 +1,14 @@
 package es.studium.tiendecitaKC;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Color;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.JSeparator;
 
@@ -18,14 +16,13 @@ public class AltaCompletadaArticulos extends JDialog
 {
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
-
-	/**
-	 * Launch the application.
-	 */
+	
+	// Método principal que inicia el programa
 	public static void main(String[] args)
 	{
 		try
 		{
+			// Mostrar la ventana al iniciarse el programa
 			AltaCompletadaArticulos dialog = new AltaCompletadaArticulos();
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
@@ -36,9 +33,7 @@ public class AltaCompletadaArticulos extends JDialog
 		}
 	}
 
-	/**
-	 * Create the dialog.
-	 */
+	// Constructor
 	public AltaCompletadaArticulos()
 	{
 		setTitle("Programa de gestión - Artículos - Alta completada");
@@ -53,6 +48,7 @@ public class AltaCompletadaArticulos extends JDialog
 		btnTickets.setFont(new Font("Comic Sans MS", Font.PLAIN, 21));
 		btnTickets.addActionListener(new ActionListener()
 		{
+			// Al clicar en Tickets, se abre la ventana ConsultaTickets y se cierra la actual
 			public void actionPerformed(ActionEvent e)
 			{
 				ConsultaTickets dig = new ConsultaTickets();
@@ -85,6 +81,7 @@ public class AltaCompletadaArticulos extends JDialog
 		cancelButton.setBounds(250, 165, 102, 23);
 		cancelButton.addActionListener(new ActionListener()
 		{
+			// Al clicar en Nuevo alta, se abre la ventana AltaArticulo y se cierra la actual
 			public void actionPerformed(ActionEvent e)
 			{
 				AltaArticulo dig = new AltaArticulo();
@@ -100,6 +97,7 @@ public class AltaCompletadaArticulos extends JDialog
 		okButton.setBounds(85, 165, 102, 23);
 		okButton.addActionListener(new ActionListener()
 		{
+			// Al clicar en Aceptar, se vuelve a abrir la ventana ConsultaArticulos y se cierra la actual
 			public void actionPerformed(ActionEvent e)
 			{
 				ConsultaArticulos dig = new ConsultaArticulos();

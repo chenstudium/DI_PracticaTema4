@@ -1,16 +1,14 @@
 package es.studium.tiendecitaKC;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Color;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.JSeparator;
 
@@ -19,16 +17,15 @@ public class AltaCompletadaTickets extends JDialog
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
 
-	/**
-	 * Launch the application.
-	 */
+	// Método principal que inicia el programa
 	public static void main(String[] args)
 	{
 		try
 		{
-			AltaCompletadaTickets dialog = new AltaCompletadaTickets();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
+			// Mostrar la ventana al iniciarse el programa
+			AltaCompletadaTickets dig = new AltaCompletadaTickets();
+			dig.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			dig.setVisible(true);
 		}
 		catch (Exception e)
 		{
@@ -36,9 +33,7 @@ public class AltaCompletadaTickets extends JDialog
 		}
 	}
 
-	/**
-	 * Create the dialog.
-	 */
+	// Constructor
 	public AltaCompletadaTickets()
 	{
 		setTitle("Programa de gestión - Tickets - Alta completada");
@@ -59,6 +54,7 @@ public class AltaCompletadaTickets extends JDialog
 		btnArticulos.setFont(new Font("Comic Sans MS", Font.PLAIN, 21));
 		btnArticulos.addActionListener(new ActionListener()
 		{
+			// Al clicar en Artículos, se abre la ventana ConsultaArticulos y se cierra la actual
 			public void actionPerformed(ActionEvent e)
 			{
 				ConsultaArticulos dig = new ConsultaArticulos();
@@ -74,6 +70,7 @@ public class AltaCompletadaTickets extends JDialog
 		cancelButton.setActionCommand("Cancel");
 		cancelButton.addActionListener(new ActionListener()
 		{
+			// Al clicar en Nuevo alta, se abre la ventana AltaTicket y se cierra la actual
 			public void actionPerformed(ActionEvent e)
 			{
 				AltaTicket dig = new AltaTicket();
@@ -91,6 +88,7 @@ public class AltaCompletadaTickets extends JDialog
 		{
 			public void actionPerformed(ActionEvent e)
 			{
+				// Al clicar en Aceptar, se vuelve a abrir la ventana ConsultaTickets y se cierra la actual
 				ConsultaTickets dig = new ConsultaTickets();
 				dig.setVisible(true);
 				setVisible(false);

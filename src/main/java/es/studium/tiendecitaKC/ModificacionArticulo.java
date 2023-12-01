@@ -1,50 +1,47 @@
 package es.studium.tiendecitaKC;
 
 import java.awt.BorderLayout;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.awt.Color;
+import java.awt.Choice;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
-import java.awt.Choice;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class ModificacionArticulo extends JDialog
 {
-	// Datos para la conexión a la base de datos
-	private static final String driver = "com.mysql.cj.jdbc.Driver";
+	// Datos para la conexión a la BD
 	private static final String URL = "jdbc:mysql://localhost:3306/tiendecitaKC";
 	private static final String USER = "root";
 	private static final String PASSWORD = "Studium2022;";
 
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
+	
 	private JTextField txtFieldDescripcion;
 	private JTextField txtFieldId;
 	private JTextField txtFieldPrecio;
 	private JTextField txtFieldCantidad;
 
-	/**
-	 * Launch the application.
-	 */
+	// Método principal que inicia el programa
 	public static void main(String[] args)
 	{
 		try
 		{
+			// Mostrar la ventana al iniciarse el programa
 			ModificacionArticulo dig = new ModificacionArticulo();
 			dig.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dig.setVisible(true);
@@ -55,13 +52,10 @@ public class ModificacionArticulo extends JDialog
 		}
 	}
 
-	/**
-	 * Create the dialog.
-	 */
+	// Constructor
 	public ModificacionArticulo()
 	{
 		Connection connection = null;
-		// ResultSet resultSet = null;
 
 		setTitle("Programa de gestión - Artículos - Modificación");
 		setBounds(100, 100, 450, 300);
@@ -75,6 +69,7 @@ public class ModificacionArticulo extends JDialog
 		btnTickets.setFont(new Font("Comic Sans MS", Font.PLAIN, 21));
 		btnTickets.addActionListener(new ActionListener()
 		{
+			// Al clicar en Tickets, se abre la ventana ConsultaTickets y se cierra la actual
 			public void actionPerformed(ActionEvent e)
 			{
 				ConsultaTickets dig = new ConsultaTickets();
@@ -163,6 +158,7 @@ public class ModificacionArticulo extends JDialog
 		cancelButton.setActionCommand("Cancel");
 		cancelButton.addActionListener(new ActionListener()
 		{
+			// Al clicar en Cancelar, se vuelve a abrir la ventana ConsultaArticulos y se cierra la actual
 			public void actionPerformed(ActionEvent e)
 			{
 				ConsultaArticulos dig = new ConsultaArticulos();
@@ -178,6 +174,7 @@ public class ModificacionArticulo extends JDialog
 		okButton.setActionCommand("OK");
 		okButton.addActionListener(new ActionListener()
 		{
+			// Al clicar en Aceptar, obtiene los valores de los campos para hacer la modificación y se abre la ventana ModificacionCompletada y se cierra la actual
 			public void actionPerformed(ActionEvent e)
 			{
 				txtFieldDescripcion.getText();
@@ -187,11 +184,10 @@ public class ModificacionArticulo extends JDialog
 
 				Connection connection = conectar();
 
-				// crear un statement para una consulta SQL de update
 				try
 				{
+					// Sentencia SQL de modificación de los datos de un artículo
 					Statement statement = connection.createStatement();
-
 					String query = "UPDATE articulos SET descripcionArticulo = '" + txtFieldDescripcion.getText()
 							+ "', precioArticulo = '" + txtFieldPrecio.getText() + "', cantidadArticulo = '"
 							+ txtFieldCantidad.getText() + "' WHERE idArticulo = '"
@@ -214,7 +210,8 @@ public class ModificacionArticulo extends JDialog
 		JLabel lblNewLabel = new JLabel("* Todos los campos son obligatorios");
 		lblNewLabel.setBounds(10, 235, 224, 14);
 		contentPanel.add(lblNewLabel);
-
+		
+		// Desplegable donde elegir el artículo a modificar
 		choiceDesplegable.addItemListener(new ItemListener()
 		{
 			public void itemStateChanged(ItemEvent ie)
@@ -223,8 +220,7 @@ public class ModificacionArticulo extends JDialog
 				if (fuente.equals(choiceDesplegable.getSelectedItem()))
 				{
 					Connection connection = conectar();
-					// Sacar el id del elemento elegido
-					String selectedItem = choiceDesplegable.getSelectedItem().trim();
+					choiceDesplegable.getSelectedItem().trim();
 					int id = Integer.parseInt(choiceDesplegable.getSelectedItem().split(" -")[0]);
 					mostrarDatos(connection, id);
 				}
@@ -236,7 +232,8 @@ public class ModificacionArticulo extends JDialog
 		});
 
 		connection = conectar();
-		// rellenar el choice
+		
+		// Sentencia SQL para obtener los artículos
 		String sql = "SELECT * FROM articulos";
 
 		try
@@ -246,9 +243,10 @@ public class ModificacionArticulo extends JDialog
 
 			while (resultset.next())
 			{
-				choiceDesplegable
-						.add(resultset.getInt("idArticulo") + " - " + resultset.getString("descripcionArticulo"));
+				// Mostrar en el desplegable dos datos principales de los artículos existentes
+				choiceDesplegable.add(resultset.getInt("idArticulo") + " - " + resultset.getString("descripcionArticulo"));
 			}
+			// Cerrar recursos
 			resultset.close();
 			statement.close();
 			connection.close();
@@ -259,25 +257,14 @@ public class ModificacionArticulo extends JDialog
 		}
 	}
 
-	// método para conectar a la base de datos
+	// Función para conectar a la BD
 	public Connection conectar()
-	{
-		String url = "jdbc:mysql://localhost:3306/tiendecitaKC"; // Ubicación y nombre de la BD
-		String user = "root"; // Usuario para conectar
-		String password = "Studium2022;"; // Clave del usuario
-
+	{		
 		Connection conexion = null;
 		try
 		{
-			Class.forName("com.mysql.cj.jdbc.Driver");
-		}
-		catch (ClassNotFoundException e)
-		{
-			e.printStackTrace();
-		}
-		try
-		{
-			conexion = DriverManager.getConnection(url, user, password);
+			// Conexión
+			conexion = DriverManager.getConnection(URL, USER, PASSWORD);
 		}
 		catch (SQLException e)
 		{
@@ -286,16 +273,17 @@ public class ModificacionArticulo extends JDialog
 		return conexion;
 	}
 
+	// Función para mostrar los datos de un artículo en los campos de texto
 	private void mostrarDatos(Connection connection, int id)
 	{
 		String sql = "SELECT * FROM articulos WHERE idArticulo = " + id;
 		try
 		{
-			// Crear un STATEMENT para una consulta SQL INSERT
 			Statement statement = connection.createStatement();
 			ResultSet resultSet = statement.executeQuery(sql);
 			while (resultSet.next())
 			{
+				// Mostrar dichos datos en sus campos correspondientes
 				String txtId = resultSet.getString("idArticulo");
 				txtFieldId.setText((txtId));
 				String txtDescr = resultSet.getString("descripcionArticulo");

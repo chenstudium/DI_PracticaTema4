@@ -1,41 +1,34 @@
 package es.studium.tiendecitaKC;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-
+import java.awt.Font;
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import java.awt.Font;
-import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
-import javax.swing.JRadioButton;
-import java.awt.Scrollbar;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.swing.JScrollBar;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import javax.swing.JScrollBar;
-
 public class ConsultaTickets extends JDialog
 {
-
-	private static final long serialVersionUID = 1L;
-	private final JPanel contentPanel = new JPanel();
-
-	// Datos para la conexión a la base de datos
-	private static final String driver = "com.mysql.cj.jdbc.Driver";
+	// Datos para la conexión a la BD
 	private static final String URL = "jdbc:mysql://localhost:3306/tiendecitaKC";
 	private static final String USER = "root";
 	private static final String PASSWORD = "Studium2022;";
+	
+	private static final long serialVersionUID = 1L;
+	private final JPanel contentPanel = new JPanel();
 	
 	private JTextField textFieldArticulo1;
 	private JTextField textFieldArticulo2;
@@ -67,17 +60,14 @@ public class ConsultaTickets extends JDialog
 	private JTextField textFieldFecha7;
 	private JLabel lblProgramaDeGestion;
 
-	/**
-	 * Launch the application.
-	 */
+	// Método principal que inicia el programa
 	public static void main(String[] args)
 	{
 		try
 		{
-			ConsultaTickets dialog = new ConsultaTickets();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-
+			ConsultaTickets dig = new ConsultaTickets();
+			dig.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			dig.setVisible(true);
 		}
 		catch (Exception e)
 		{
@@ -85,9 +75,7 @@ public class ConsultaTickets extends JDialog
 		}
 	}
 
-	/**
-	 * Create the dialog.
-	 */
+	// Constructor
 	public ConsultaTickets()
 	{
 		setTitle("Programa de gestión - Tickets - Consulta");
@@ -102,6 +90,7 @@ public class ConsultaTickets extends JDialog
 		btnArticulos.setFont(new Font("Comic Sans MS", Font.PLAIN, 21));
 		btnArticulos.addActionListener(new ActionListener()
 		{
+			// Al clicar en Artículos, se abre la ventana ConsultaArticulos y se cierra la actual
 			public void actionPerformed(ActionEvent e)
 			{
 				ConsultaArticulos dig = new ConsultaArticulos();
@@ -136,6 +125,7 @@ public class ConsultaTickets extends JDialog
 		btnNuevoAlta.setFont(new Font("Comic Sans MS", Font.PLAIN, 10));
 		btnNuevoAlta.addActionListener(new ActionListener()
 		{
+			// Al clicar en Nuevo alta, se abre la ventana AltaTicket y se cierra la actual
 			public void actionPerformed(ActionEvent e)
 			{
 				AltaTicket dig = new AltaTicket();
@@ -386,40 +376,39 @@ public class ConsultaTickets extends JDialog
 
 	private void consultarTickets()
 	{
-		Connection connection = null;
+		Connection conexion = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 
 		try
 		{
-			// Establecer la conexión
-			connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			// Conexión
+			conexion = DriverManager.getConnection(URL, USER, PASSWORD);
 
-			// Consulta SQL (ajusta según tu esquema y necesidades)
+			// Sentencia SQL para obtener todos los datos de los tickets
 			String sql = "SELECT fechaTicket, idTicket, idArticuloFK, totalTicket FROM tickets WHERE fechaTicket LIKE ?";
-			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement = conexion.prepareStatement(sql);
 
-			// Establecer parámetro
+			// Parámetro
 			preparedStatement.setString(1, "%" + textFieldId1.getText() + "%");
-			
-			// Ejecutar la consulta
 			resultSet = preparedStatement.executeQuery();
 
 			// Procesar resultados
 			int index = 1; // Índice para rastrear el conjunto de campos de texto actual
-			// Procesar resultados y mostrar en la interfaz gráfica
+			
+			// Procesar resultados y mostrarlos
 			while (resultSet.next() && index <= 7)
 			{
-				// Obtener datos de la base de datos y guardarlos en variables
+				// Obtener datos de la BD y guardarlos en variables
 				String fecha = resultSet.getString("fechaTicket");
 				int id = resultSet.getInt("idTicket");
 				int idArticulo = resultSet.getInt("idArticuloFK");
 				double total = resultSet.getDouble("totalTicket");
 
-				// Establecer los valores en los campos de texto
+				// Establecer los datos en los campos de la primera fila
 				asignarValoresCamposTexto(index, fecha, id, idArticulo, total);
 
-				// Incrementar el índice para el siguiente conjunto de campos de texto
+				// Incrementar el índice para los campos de la siguiente fila
 				index++;
 			}
 		}
@@ -436,8 +425,8 @@ public class ConsultaTickets extends JDialog
 					resultSet.close();
 				if (preparedStatement != null)
 					preparedStatement.close();
-				if (connection != null)
-					connection.close();
+				if (conexion != null)
+					conexion.close();
 			}
 			catch (SQLException e)
 			{
@@ -446,6 +435,7 @@ public class ConsultaTickets extends JDialog
 		}
 	}
 
+	// Método para asignar valores a los campos de texto según el índice
 	private void asignarValoresCamposTexto(int index, String fecha, int id, int idArticulo, double total)
 	{
 		switch (index)

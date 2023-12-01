@@ -1,53 +1,51 @@
 package es.studium.tiendecitaKC;
 
 import java.awt.BorderLayout;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.Color;
+import java.awt.Choice;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import javax.swing.JSeparator;
+import javax.swing.JTextField;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.awt.Color;
-import javax.swing.JLabel;
-import javax.swing.JSeparator;
-import javax.swing.JTextField;
-import java.awt.Choice;
 
 public class BajaArticulo extends JDialog
 {
-	// Datos para la conexión a la base de datos
-	private static final String driver = "com.mysql.cj.jdbc.Driver";
+	// Datos para la conexión a la BD
 	private static final String URL = "jdbc:mysql://localhost:3306/tiendecitaKC";
 	private static final String USER = "root";
 	private static final String PASSWORD = "Studium2022;";
 
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
+	
 	private JTextField txtFieldDescripcion;
 	private JTextField txtFieldId;
 	private JTextField txtFieldPrecio;
 	private JTextField txtFieldCantidad;
 
-	/**
-	 * Launch the application.
-	 */
+	// Método principal que inicia el programa
 	public static void main(String[] args)
 	{
 		try
 		{
-			BajaArticulo dialog = new BajaArticulo();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
+			// Mostrar la ventana al iniciarse el programa
+			BajaArticulo dig = new BajaArticulo();
+			dig.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			dig.setVisible(true);
 		}
 		catch (Exception e)
 		{
@@ -55,13 +53,10 @@ public class BajaArticulo extends JDialog
 		}
 	}
 
-	/**
-	 * Create the dialog.
-	 */
+	// Constructor
 	public BajaArticulo()
 	{
 		Connection connection = null;
-		// ResultSet resultSet = null;
 
 		setTitle("Programa de gestión - Artículos - Baja");
 		setBounds(100, 100, 450, 300);
@@ -75,6 +70,7 @@ public class BajaArticulo extends JDialog
 		btnTickets.setFont(new Font("Comic Sans MS", Font.PLAIN, 21));
 		btnTickets.addActionListener(new ActionListener()
 		{
+			// Al clicar en Tickets, se abre la ventana ConsultaTickets y se cierra la actual
 			public void actionPerformed(ActionEvent e)
 			{
 				ConsultaTickets dig = new ConsultaTickets();
@@ -166,6 +162,7 @@ public class BajaArticulo extends JDialog
 		cancelButton.setActionCommand("Cancel");
 		cancelButton.addActionListener(new ActionListener()
 		{
+			// Al clicar en Cancelar, se vuelve a abrir la ventana ConsultaArticulos y se cierra la actual
 			public void actionPerformed(ActionEvent e)
 			{
 				ConsultaArticulos dig = new ConsultaArticulos();
@@ -181,17 +178,17 @@ public class BajaArticulo extends JDialog
 		okButton.setActionCommand("OK");
 		okButton.addActionListener(new ActionListener()
 		{
+			// Al clicar en Dar de baja, obtiene los valores de los campos para eliminarlos y se abre la ventana BajaCompletada y se cierra la actual
 			public void actionPerformed(ActionEvent e)
 			{
-				// Obtener el ID del artículo seleccionado en el Choice
 		        String selectedItem = choiceDesplegable.getSelectedItem().trim();
 		        int id = Integer.parseInt(selectedItem.split(" -")[0]);
 
-		        // Establecer conexión a la base de datos
 		        Connection connection = conectar();
 
-		        // Ejecutar la consulta SQL para eliminar el registro
-		        try {
+		        try
+		        {
+		        	// Sentencia SQL de eliminar de un artículo
 		            String query = "DELETE FROM articulos WHERE idArticulo = ?";
 		            PreparedStatement preparedStatement = connection.prepareStatement(query);
 		            preparedStatement.setInt(1, id);
@@ -200,43 +197,20 @@ public class BajaArticulo extends JDialog
 		            preparedStatement.close();
 		            connection.close();
 		            
-		            // Mostrar un mensaje de baja completada o realizar otras acciones necesarias
 		            BajaCompletada dig = new BajaCompletada();
 		            dig.setVisible(true);
 		            setVisible(false);
-		        } catch (SQLException ex) {
+		        }
+		        catch (SQLException ex)
+		        {
 		            ex.printStackTrace();
 		        }
-				/*txtFieldDescripcion.getText();
-				txtFieldId.getText();
-				txtFieldPrecio.getText();
-				txtFieldCantidad.getText();
-
-				Connection connection = conectar();
-
-				// crear un statement para una consulta SQL de update
-				try
-				{
-					Statement statement = connection.createStatement();
-
-					String query = "UPDATE articulos SET descripcionArticulo = '" + txtFieldDescripcion.getText()
-							+ "', precioArticulo = '" + txtFieldPrecio.getText() + "', cantidadArticulo = '"
-							+ txtFieldCantidad.getText() + "' WHERE idArticulo = '"
-							+ Integer.parseInt(txtFieldId.getText()) + "'";
-
-					statement.executeUpdate(query);
-				}
-				catch (SQLException ex)
-				{
-					ex.printStackTrace();
-				}
-				BajaCompletada dig = new BajaCompletada();
-				dig.setVisible(true);*/
 			}
 		});
 		okButton.setBounds(90, 231, 100, 23);
 		contentPanel.add(okButton);
 
+		// Desplegable donde elegir el artículo a eliminar
 		choiceDesplegable.addItemListener(new ItemListener()
 		{
 			public void itemStateChanged(ItemEvent ie)
@@ -245,8 +219,7 @@ public class BajaArticulo extends JDialog
 				if (fuente.equals(choiceDesplegable.getSelectedItem()))
 				{
 					Connection connection = conectar();
-					// Sacar el id del elemento elegido
-					String selectedItem = choiceDesplegable.getSelectedItem().trim();
+					choiceDesplegable.getSelectedItem().trim();
 					int id = Integer.parseInt(choiceDesplegable.getSelectedItem().split(" -")[0]);
 					mostrarDatos(connection, id);
 				}
@@ -258,7 +231,8 @@ public class BajaArticulo extends JDialog
 		});
 
 		connection = conectar();
-		// rellenar el choice
+		
+		// Sentencia SQL para obtener los artículos
 		String sql = "SELECT * FROM articulos";
 
 		try
@@ -268,9 +242,10 @@ public class BajaArticulo extends JDialog
 
 			while (resultset.next())
 			{
-				choiceDesplegable
-						.add(resultset.getInt("idArticulo") + " - " + resultset.getString("descripcionArticulo"));
+				// Mostrar en el desplegable dos datos principales de los artículos existentes
+				choiceDesplegable.add(resultset.getInt("idArticulo") + " - " + resultset.getString("descripcionArticulo"));
 			}
+			// Cerrar recursos
 			resultset.close();
 			statement.close();
 			connection.close();
@@ -281,25 +256,13 @@ public class BajaArticulo extends JDialog
 		}
 	}
 
-	// método para conectar a la base de datos
+	// Función para conectar a la BD
 	public Connection conectar()
 	{
-		String url = "jdbc:mysql://localhost:3306/tiendecitaKC"; // Ubicación y nombre de la BD
-		String user = "root"; // Usuario para conectar
-		String password = "Studium2022;"; // Clave del usuario
-
 		Connection conexion = null;
 		try
 		{
-			Class.forName("com.mysql.cj.jdbc.Driver");
-		}
-		catch (ClassNotFoundException e)
-		{
-			e.printStackTrace();
-		}
-		try
-		{
-			conexion = DriverManager.getConnection(url, user, password);
+			conexion = DriverManager.getConnection(URL, USER, PASSWORD);
 		}
 		catch (SQLException e)
 		{
@@ -308,16 +271,17 @@ public class BajaArticulo extends JDialog
 		return conexion;
 	}
 
+	// Función para mostrar los datos de un artículo en los campos de texto
 	private void mostrarDatos(Connection connection, int id)
 	{
 		String sql = "SELECT * FROM articulos WHERE idArticulo = " + id;
 		try
 		{
-			// Crear un STATEMENT para una consulta SQL INSERT
 			Statement statement = connection.createStatement();
 			ResultSet resultSet = statement.executeQuery(sql);
 			while (resultSet.next())
 			{
+				// Mostrar dichos datos en sus campos correspondientes
 				String txtId = resultSet.getString("idArticulo");
 				txtFieldId.setText((txtId));
 				String txtDescr = resultSet.getString("descripcionArticulo");
